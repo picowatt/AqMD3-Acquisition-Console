@@ -1,8 +1,4 @@
-﻿# CMakeList.txt : CMake project for FalkorAcquisition, include source and define
-# project specific logic here.
-#
-
-project (AqMD3_console)
+﻿project (AqMD3_console)
 
 find_path(PICOSHA2_INCLUDE_DIRS "picosha2.h")
 

@@ -1,8 +1,4 @@
-﻿# CMakeList.txt : CMake project for FalkorAcquisition, include source and define
-# project specific logic here.
-#
-
-project (UIMFWriter)
+﻿project (UIMFWriter)
 
 find_package(SQLiteCpp CONFIG REQUIRED)
 

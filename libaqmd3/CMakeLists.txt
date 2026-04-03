@@ -1,7 +1,3 @@
-# CMakeList.txt : CMake project for FalkorAcquisition, include source and define
-# project specific logic here.
-#
-
 project (libaqmd3)
 
 add_library (libaqmd3
