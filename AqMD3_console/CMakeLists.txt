@@ -45,9 +45,9 @@ add_executable (AqMD3_console
 	include/diagnostic/datageneratorcontext.h
 	include/uimfframewritersubscriber.h
 	include/definitions.h
+	include/uimfacquisitionrecord.h
+	include/config/config.h   
 	include/util/timehelpers.h
-	include/util/config.h  
-	include/uimfacquisitionrecord.h 
 	include/util/uimfhelpers.h
 	include/massspec/toftiminginformation.h)
 target_include_directories(AqMD3_console PRIVATE ${PICOSHA2_INCLUDE_DIRS})

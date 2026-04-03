@@ -5,7 +5,7 @@
 #include "../include/zmqacquireddatasubscriber.h"
 #include "../include/processsubject.h"
 #include "../include/definitions.h"
-#include "../include/util/config.h"
+#include "../include/config/config.h"
 #include "../include/util/uimfhelpers.h"
 #include "../include/message.pb.h"
 #include "../include/massspec/toftiminginformation.h"
