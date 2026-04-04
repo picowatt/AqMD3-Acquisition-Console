@@ -15,7 +15,6 @@ add_library (core
 	include/processsubject.h
 	include/zmqacquireddatasubscriber.h
 	include/uimfframewritersubscriber.h
-	include/definitions.h
 	include/uimfacquisitionrecord.h
 	include/pubsub/publisher.h
 	include/pubsub/subscriber.h
