@@ -1,6 +1,4 @@
 #include "../include/processsubject.h"
-#include "../include/definitions.h"
-#include "../include/definitions.h"
 #include "../include/util//timehelpers.h"
 #include "../include/uimfacquisitionrecord.h"
 #include <numeric>
@@ -10,11 +8,6 @@
 // static int delta = 100; // TODO: move to config
 
 #define MIN(a, b) (((a) < (b)) ? (a) : (b))
-
-#if TIMING_INFORMATION
-std::chrono::steady_clock::time_point start;
-static bool first = true;
-#endif
 
 void ProcessSubject::on_notify(UimfAcquisitionRecord& item)
 {
@@ -42,17 +35,10 @@ void ProcessSubject::on_notify(UimfAcquisitionRecord& item)
 		//	spdlog::warn(std::format("Last {} recorded timestamps avg (in samples):\t {}", ad.stamps.size(), avg_ts));
 		//	spdlog::warn(std::format("Expected avg (in samples):\t {} +/- {}", tof_avg_samples, delta));
 		//}
-#if TIMING_INFORMATION
-		auto start = std::chrono::high_resolution_clock::now();
-#endif
+
 		auto result = item.to_frame();
 		auto notify_type = result->parameters().file_name.empty() ? SubscriberType::ACQUIRE : SubscriberType::BOTH;
 		Publisher<frame_ptr>::notify(result, notify_type);
-#if TIMING_INFORMATION
-		auto stop = std::chrono::high_resolution_clock::now();
-		auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
-		spdlog::debug("Total time to notify: {} ms", duration.count());
-#endif
 	}
 	catch (const std::exception& ex)
 	{
