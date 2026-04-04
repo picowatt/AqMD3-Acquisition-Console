@@ -20,7 +20,6 @@ public:
 		: StreamingContext(digitizer, channel, buffer_pool)
 		, tof_width(200000)
 		, acq_count(0)
-		//, triggers_per_read(triggers_per_read)
 	{}
 
 	void start()
