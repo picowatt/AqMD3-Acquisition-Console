@@ -663,3 +663,4 @@ FodyWeavers.xsd
 
 build/
 .vscode/
+vcpkg_installed/
