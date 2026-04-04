@@ -38,7 +38,6 @@ public:
 	virtual ~AcquirePublisher() = default;
 
 	void start(UimfFrameParameters parameters);
-	//void start() override;
 	void stop(bool terminate_acquisition_chain) override;
 
 };

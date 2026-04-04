@@ -76,7 +76,6 @@ void AcquirePublisher::start(UimfFrameParameters parameters)
 				}
 
 				state = State::STOPPED;
-				//stop_signal.set_value(State::STOPPED);
 				digitizer->stop();
 				spdlog::info(std::format("Scans acquired: {}", scans_acquired_count));
 
