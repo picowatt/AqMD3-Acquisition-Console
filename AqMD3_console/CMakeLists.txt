@@ -24,32 +24,10 @@ link_directories("C:/Program Files/IVI Foundation/VISA/Win64L/lib_x64/msc")
 # Add source to this project's executable.
 add_executable (AqMD3_console 
 	src/aqmd3_console.cpp
-	src/server.cpp
-	src/server.cpp
-	src/message.pb.cpp
-	src/acquirepublisher.cpp
-	src/processsubject.cpp
-	src/zmqacquireddatasubscriber.cpp
-	src/uimfframewritersubscriber.cpp
-	src/uimfacquisitionrecord.cpp
-	src/massspec/toftiminginformation.cpp
-	include/server.h
-	include/server.h
-	include/message.pb.h
-	include/publisher.h
-	include/subscriber.h
-	include/acquirepublisher.h
-	include/acquisitioncontrol.h
-	include/processsubject.h
-	include/zmqacquireddatasubscriber.h
-	include/diagnostic/datageneratorcontext.h
-	include/uimfframewritersubscriber.h
 	include/definitions.h
-	include/uimfacquisitionrecord.h
 	include/config/config.h   
-	include/util/timehelpers.h
-	include/util/uimfhelpers.h
-	include/massspec/toftiminginformation.h)
+	)
+
 target_include_directories(AqMD3_console PRIVATE ${PICOSHA2_INCLUDE_DIRS})
 
 target_link_libraries(AqMD3_console PRIVATE cppzmq cppzmq-static)
