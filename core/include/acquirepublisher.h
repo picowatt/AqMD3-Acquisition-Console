@@ -1,10 +1,10 @@
 #ifndef ACQUIRE_PUBLISHER_H
 #define ACQUIRE_PUBLISHER_H
 
-#include "publisher.h"
+#include "pubsub/publisher.h"
 #include "acquisitioncontrol.h"
 #include "uimfacquisitionrecord.h"
-#include "server.h"
+#include "server/server.h"
 #include <libaqmd3/streamingcontext.h>
 #include <vector>
 #include <thread>

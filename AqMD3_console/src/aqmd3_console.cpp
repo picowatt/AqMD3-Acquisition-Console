@@ -1,14 +1,14 @@
-﻿#include "../include/server.h"
-#include "../include/acquisitioncontrol.h"
-#include "../include/acquirepublisher.h"
-#include "../include/uimfframewritersubscriber.h"
-#include "../include/zmqacquireddatasubscriber.h"
-#include "../include/processsubject.h"
+﻿#include <server/server.h>
+#include <acquisitioncontrol.h>
+#include <acquirepublisher.h>
+#include <uimfframewritersubscriber.h>
+#include <zmqacquireddatasubscriber.h>
+#include <processsubject.h>
 #include "../include/definitions.h"
 #include "../include/config/config.h"
-#include "../include/util/uimfhelpers.h"
-#include "../include/message.pb.h"
-#include "../include/massspec/toftiminginformation.h"
+#include <util/uimfhelpers.h>
+#include <message.pb.h>
+#include <massspec/toftiminginformation.h>
 #include "include/app.h"
 
 #include <libaqmd3/digitizer.h>
@@ -23,7 +23,9 @@
 
 #include <stdexcept>
 #include <picosha2.h>
+
 #include <visa.h>
+
 #include <snappy.h>
 #include <zmq.hpp>
 #include <iostream>
@@ -34,7 +36,7 @@
 #include <optional>
 using std::cerr;
 #include <windows.h>
-#include "../include/diagnostic/datageneratorcontext.h"
+#include <diagnostic/datageneratorcontext.h>
 
 #define NOMINMAX 
 #undef min

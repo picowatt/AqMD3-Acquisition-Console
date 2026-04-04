@@ -1,7 +1,7 @@
 #ifndef DATA_GENERATOR_CONTEXT_H
 #define DATA_GENERATOR_CONTEXT_H
 
-#include "libaqmd3/streamingcontext.h"
+#include <libaqmd3/streamingcontext.h>
 #include <libaqmd3/AcquiredData.h>
 #include <vector>
 #include <tuple>

@@ -1,5 +1,18 @@
 project (libaqmd3)
 
+
+set(IVI_INCLUDE_DIR "C:/Program Files/IVI Foundation/IVI/Include")
+set(VISA_INCLUDE_DIR "C:/Program Files/IVI Foundation/VISA/Win64/Include")
+
+set(IVI_LIB_DIR "C:/Program Files/IVI Foundation/IVI/Lib_x64/msc")
+set(VISA_LIB_DIR "C:/Program Files/IVI Foundation/VISA/Win64/lib_x64/msc")
+
+find_library(AQMD3_LIBRARY
+    NAMES AqMD3
+    PATHS "${IVI_LIB_DIR}"
+    NO_DEFAULT_PATH
+)
+
 add_library (libaqmd3
 	src/digitizer.cpp
 	src/acquisitionbuffer.cpp
@@ -17,18 +30,22 @@ add_library (libaqmd3
 	include/libaqmd3/acquireddata.h
 	include/libaqmd3/sa220.h
 	include/libaqmd3/acquisitionbufferpool.h
- "include/libaqmd3/helpers.h"  "src/helpers.cpp")
+ 	include/libaqmd3/helpers.h
+	src/helpers.cpp
+	)
+
 add_library(i::digi ALIAS libaqmd3)
 
-include_directories("C:/Program Files/IVI Foundation/IVI/Include")
-include_directories("C:/Program Files/IVI Foundation/VISA/Win64/Include")
-find_library(AQMD3_LIBRARY AqMD3 HINTS "C:/Program Files/IVI Foundation/IVI/Lib_x64/*")
-target_link_libraries(libaqmd3 PRIVATE ${AQMD3_LIBRARY})
+target_include_directories(libaqmd3
+    PUBLIC
+        ${PROJECT_SOURCE_DIR}/include
+        ${IVI_INCLUDE_DIR}
+        ${VISA_INCLUDE_DIR}
+)
 
-# Required for "acquireddata" class. Should be refactored so that this lib is not 
-# dependant on the UIMF lib
-target_link_libraries(libaqmd3 PUBLIC i::uimf)
-
-target_include_directories ( libaqmd3
-	PUBLIC ${PROJECT_SOURCE_DIR}/include
+target_link_libraries(libaqmd3
+    PRIVATE
+        ${AQMD3_LIBRARY}
+    PUBLIC
+        i::uimf
 )

@@ -1,7 +1,4 @@
-﻿# CMakeList.txt : Top-level CMake project file, do global configuration
-# and include sub-projects here.
-#
-cmake_minimum_required (VERSION 3.12)
+﻿cmake_minimum_required (VERSION 3.12)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /std:c++20")
 set (VCPKG_FEATURE_FLAGS "versions")
@@ -10,7 +7,9 @@ project (AqMD3_console VERSION 1.1.0)
 # Include sub-projects.
 add_subdirectory ("UIMFWriter")
 add_subdirectory ("libaqmd3")
+add_subdirectory ("core")
 add_subdirectory ("AqMD3_console")
+add_subdirectory ("AqMD3_cli")
 
 target_compile_options(AqMD3_console PRIVATE "$<$<CONFIG:Release>:/Zi>")
 target_compile_options(AqMD3_console PRIVATE "$<$<CONFIG:Release>:/EHa>")

@@ -8,7 +8,7 @@
 #define NOMINMAX 
 #undef min
 #undef max
-#include "../include/message.pb.h"
+#include "message.pb.h"
 
 // High level interface for managing acquisition.
 class AcquisitionControl {

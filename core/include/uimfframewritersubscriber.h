@@ -1,8 +1,7 @@
 #ifndef UIMF_FRAME_WRITER_SUBSCRIBER_H
 #define UIMF_FRAME_WRITER_SUBSCRIBER_H
-#include "subscriber.h"
+#include "pubsub/subscriber.h"
 #include <UIMFWriter/uimfframe.h>
-#include "definitions.h"
 
 class UimfFrameWriterSubscriber : public Subscriber<std::shared_ptr<UimfFrame>> {
 private:
