@@ -1,10 +1,10 @@
 #ifndef ZMQ_ACQUIRED_DATA_SUBSCRIBER_H
 #define ZMQ_ACQUIRED_DATA_SUBSCRIBER_H
 
-#include "subscriber.h"
+#include "pubsub/subscriber.h"
 #include <libaqmd3/acquireddata.h>
 #include <UIMFWriter/uimfframe.h>
-#include "server.h"
+#include "server/server.h"
 #include <string>
 #include <zmq.hpp>
 
