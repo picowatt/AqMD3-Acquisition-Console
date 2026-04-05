@@ -1,6 +1,6 @@
 ﻿#include <server/server.h>
-#include <acquisitioncontrol.h>
-#include <acquirepublisher.h>
+#include <acquisitioncontroller.h>
+#include <acquisitionpublisher.h>
 #include <uimfframewritersubscriber.h>
 #include <zmqacquireddatasubscriber.h>
 #include <processsubject.h>
@@ -8,7 +8,7 @@
 #include "../include/config/config.h"
 #include <util/uimfhelpers.h>
 #include <message.pb.h>
-#include <massspec/toftiminginformation.h>
+#include <mass_spec/toftiminginformation.h>
 #include "include/app.h"
 
 #include <libaqmd3/digitizer.h>
@@ -217,15 +217,15 @@ int main(int argc, char *argv[]) {
 
 		auto server = new Server("tcp://*:5555");
 		double sampling_rate = 0.0;
-		std::unique_ptr<AcquisitionControl> controller;
-		std::shared_ptr<AcquisitionBufferPool> buffer_pool = nullptr;
+		// std::unique_ptr<AcquisitionControl> controller;
+		// std::shared_ptr<AcquisitionBufferPool> buffer_pool = nullptr;
 
-#if REUSABLE_PUB_SUB
-		int record_size_c = 0;
-		std::shared_ptr<StreamingContext> context;
-		std::shared_ptr<ZmqAcquiredDataSubscriber> zmq_publisher;
-		std::shared_ptr<UimfFrameWriterSubscriber> frame_writer = std::make_shared<UimfFrameWriterSubscriber>(false);
-#endif // reusable_pub_sub
+// #if REUSABLE_PUB_SUB
+// 		int record_size_c = 0;
+// 		std::shared_ptr<StreamingContext> context;
+// 		std::shared_ptr<ZmqAcquiredDataSubscriber> zmq_publisher;
+// 		std::shared_ptr<UimfFrameWriterSubscriber> frame_writer = std::make_shared<UimfFrameWriterSubscriber>(false);
+// #endif // reusable_pub_sub
 
 		server->register_handler([&](Server::ReceivedRequest req)
 			{
@@ -355,15 +355,15 @@ int main(int argc, char *argv[]) {
 #if TIMING_INFORMATION
 							auto t_0 = std::chrono::high_resolution_clock::now();
 #endif
-							std::string uimf_req_msg;
-							snappy::Uncompress(req.payload[1].data(), req.payload[1].size(), &uimf_req_msg);
-							auto uimf = UimfRequestMessage();
-							uimf.MergeFromString(uimf_req_msg);
+							// std::string uimf_req_msg;
+							// snappy::Uncompress(req.payload[1].data(), req.payload[1].size(), &uimf_req_msg);
+							// auto uimf = UimfRequestMessage();
+							// uimf.MergeFromString(uimf_req_msg);
 
-							// Start acquire. Waits for external enabe signal.
-							auto uimf_frame_params = UIMFHelpers::uimf_message_to_parameters(uimf);
-							//UIMFHelpers::log_debug_uimf_frame_params(uimf_frame_params);
-							controller->start(uimf_frame_params);
+							// // Start acquire. Waits for external enabe signal.
+							// auto uimf_frame_params = UIMFHelpers::uimf_message_to_parameters(uimf);
+							// //UIMFHelpers::log_debug_uimf_frame_params(uimf_frame_params);
+							// controller->start(uimf_frame_params);
 
 #if TIMING_INFORMATION
 							auto t_1 = std::chrono::high_resolution_clock::now();
@@ -378,129 +378,129 @@ int main(int argc, char *argv[]) {
 
 					if (command == "acquire")
 					{
-#if TEST_ACQUIRE
-						auto timing = AqirisDigitizer::TofTimingInformation(
-							200000,
-							200000 - 20000 - 20000,
-							20000,
-							20000,
-							post_trigger_delay,
-							estimated_trigger_rearm_time);
-#else
-						auto timing = AqirisDigitizer::TofTimingInformation::create_timing_information(digitizer.get(), sampling_rate, post_trigger_delay, estimated_trigger_rearm_time);
-#endif
-						uint64_t record_size = timing.get_record_size();
-						uint64_t post_trigger_samples = timing.get_post_trigger_delay_samples();
-						uint64_t tof_width = timing.get_samples_per_trigger();
-						spdlog::info("tof width: " + std::to_string(tof_width));
-						spdlog::info("samples per trigger: " + std::to_string(record_size + post_trigger_samples));
-						spdlog::info("record size: " + std::to_string(record_size));
-						spdlog::info("post trigger samples: " + std::to_string(post_trigger_samples));
-						digitizer->set_record_size(record_size);
-						avg_tof_period_samples = tof_width;
-						calculated_post_trigger_samples = post_trigger_samples;
+// #if TEST_ACQUIRE
+// 						auto timing = AqirisDigitizer::TofTimingInformation(
+// 							200000,
+// 							200000 - 20000 - 20000,
+// 							20000,
+// 							20000,
+// 							post_trigger_delay,
+// 							estimated_trigger_rearm_time);
+// #else
+// 						auto timing = TofTimingInformation::create_timing_information(digitizer.get(), sampling_rate, post_trigger_delay, estimated_trigger_rearm_time);
+// #endif
+// 						uint64_t record_size = timing.get_record_size();
+// 						uint64_t post_trigger_samples = timing.get_post_trigger_delay_samples();
+// 						uint64_t tof_width = timing.get_samples_per_trigger();
+// 						spdlog::info("tof width: " + std::to_string(tof_width));
+// 						spdlog::info("samples per trigger: " + std::to_string(record_size + post_trigger_samples));
+// 						spdlog::info("record size: " + std::to_string(record_size));
+// 						spdlog::info("post trigger samples: " + std::to_string(post_trigger_samples));
+// 						digitizer->set_record_size(record_size);
+// 						avg_tof_period_samples = tof_width;
+// 						calculated_post_trigger_samples = post_trigger_samples;
 
-						auto data_pub = server->get_publisher("tcp://*:5554");
+// 						auto data_pub = server->get_publisher("tcp://*:5554");
 
-						if (buffer_pool == nullptr)
-						{
-							buffer_pool = std::make_shared<AcquisitionBufferPool>(notify_on_scans_count, avg_tof_period_samples, acquisition_initial_buffer_count, acquisition_max_buffer_count);
-						}
-#if TEST_ACQUIRE
-						context = std::make_shared<DataGeneratorContext>(dynamic_cast<const Digitizer&>(*digitizer), digitizer->channel_1, notify_on_scans_count, buffer_pool);
-#else
-						context = digitizer->configure_cst(digitizer->channel_1, buffer_pool, Digitizer::ZeroSuppressParameters(-32667, 100));
-#endif
+// 						if (buffer_pool == nullptr)
+// 						{
+// 							buffer_pool = std::make_shared<AcquisitionBufferPool>(notify_on_scans_count, avg_tof_period_samples, acquisition_initial_buffer_count, acquisition_max_buffer_count);
+// 						}
+// #if TEST_ACQUIRE
+// 						context = std::make_shared<DataGeneratorContext>(dynamic_cast<const Digitizer&>(*digitizer), digitizer->channel_1, notify_on_scans_count, buffer_pool);
+// #else
+// 						context = digitizer->configure_cst(digitizer->channel_1, buffer_pool, Digitizer::ZeroSuppressParameters(-32667, 100));
+// #endif
 
-						std::unique_ptr<AcquirePublisher> p = std::make_unique<AcquirePublisher>(context, acquisition_timeout_ms, buffer_pool, notify_on_scans_count, data_pub);
-						std::shared_ptr<ProcessSubject> ps = std::make_shared<ProcessSubject>(tof_width);
-						std::shared_ptr<UimfFrameWriterSubscriber> fw = std::make_shared<UimfFrameWriterSubscriber>(false);
-						std::shared_ptr<ZmqAcquiredDataSubscriber> zmq = std::make_shared<ZmqAcquiredDataSubscriber>(data_pub, record_size + post_trigger_samples);
-						ps->Publisher<frame_ptr>::register_subscriber(zmq, SubscriberType::ACQUIRE);
-						ps->Publisher<frame_ptr>::register_subscriber(fw, SubscriberType::ACQUIRE_FRAME);
-						p->register_subscriber(ps, SubscriberType::BOTH);
+// 						std::unique_ptr<AcquirePublisher> p = std::make_unique<AcquirePublisher>(context, acquisition_timeout_ms, buffer_pool, notify_on_scans_count, data_pub);
+// 						std::shared_ptr<ProcessSubject> ps = std::make_shared<ProcessSubject>(tof_width);
+// 						std::shared_ptr<UimfFrameWriterSubscriber> fw = std::make_shared<UimfFrameWriterSubscriber>(false);
+// 						std::shared_ptr<ZmqAcquiredDataSubscriber> zmq = std::make_shared<ZmqAcquiredDataSubscriber>(data_pub, record_size + post_trigger_samples);
+// 						ps->Publisher<frame_ptr>::register_subscriber(zmq, SubscriberType::ACQUIRE);
+// 						ps->Publisher<frame_ptr>::register_subscriber(fw, SubscriberType::ACQUIRE_FRAME);
+// 						p->register_subscriber(ps, SubscriberType::BOTH);
 
-						controller = std::move(p);
+// 						controller = std::move(p);
 
-						auto uimf_frame_params = UIMFHelpers::create_inf_params();
-						controller->start(uimf_frame_params);
+// 						auto uimf_frame_params = UIMFHelpers::create_inf_params();
+// 						controller->start(uimf_frame_params);
 
-						std::vector<std::string> to_send(2);
+// 						std::vector<std::string> to_send(2);
 
-						TofWidthMessage tofMsg;
-						tofMsg.set_num_samples(record_size + post_trigger_samples);
-						tofMsg.set_pusher_pulse_width(tof_width);
-						to_send[0] = (tofMsg.SerializeAsString());
-						std::vector<uint8_t> hash(picosha2::k_digest_size);
+// 						TofWidthMessage tofMsg;
+// 						tofMsg.set_num_samples(record_size + post_trigger_samples);
+// 						tofMsg.set_pusher_pulse_width(tof_width);
+// 						to_send[0] = (tofMsg.SerializeAsString());
+// 						std::vector<uint8_t> hash(picosha2::k_digest_size);
 
-						picosha2::hash256(to_send[0].begin(), to_send[0].end(), hash.begin(), hash.end());
+// 						picosha2::hash256(to_send[0].begin(), to_send[0].end(), hash.begin(), hash.end());
 
-						to_send[1] = picosha2::bytes_to_hex_string(hash.begin(), hash.end());
-						req.send_responses(to_send);
+// 						to_send[1] = picosha2::bytes_to_hex_string(hash.begin(), hash.end());
+// 						req.send_responses(to_send);
 
 						return;
 					}
 
 					if (command == "tof width")
 					{
-						auto timing = AqirisDigitizer::TofTimingInformation::create_timing_information(digitizer.get(), sampling_rate, post_trigger_delay, estimated_trigger_rearm_time);
-						uint64_t record_size = timing.get_record_size();
-						uint64_t post_trigger_samples = timing.get_post_trigger_delay_samples();
-						uint64_t tof_width = timing.get_samples_per_trigger();
-						spdlog::info("samples per trigger: " + std::to_string(record_size + post_trigger_samples));
-						spdlog::info("record size: " + std::to_string(record_size));
-						spdlog::info("post trigger samples: " + std::to_string(post_trigger_samples));
-						digitizer->set_record_size(record_size);
+						// auto timing = AqirisDigitizer::TofTimingInformation::create_timing_information(digitizer.get(), sampling_rate, post_trigger_delay, estimated_trigger_rearm_time);
+						// uint64_t record_size = timing.get_record_size();
+						// uint64_t post_trigger_samples = timing.get_post_trigger_delay_samples();
+						// uint64_t tof_width = timing.get_samples_per_trigger();
+						// spdlog::info("samples per trigger: " + std::to_string(record_size + post_trigger_samples));
+						// spdlog::info("record size: " + std::to_string(record_size));
+						// spdlog::info("post trigger samples: " + std::to_string(post_trigger_samples));
+						// digitizer->set_record_size(record_size);
 
-						std::vector<std::string> to_send(2);
+						// std::vector<std::string> to_send(2);
 
-						TofWidthMessage tofMsg;
-						tofMsg.set_num_samples(record_size + post_trigger_samples);
-						tofMsg.set_pusher_pulse_width(tof_width);
-						to_send[0] = (tofMsg.SerializeAsString());
-						std::vector<uint8_t> hash(picosha2::k_digest_size);
-						picosha2::hash256(to_send[0].begin(), to_send[0].end(), hash.begin(), hash.end());
+						// TofWidthMessage tofMsg;
+						// tofMsg.set_num_samples(record_size + post_trigger_samples);
+						// tofMsg.set_pusher_pulse_width(tof_width);
+						// to_send[0] = (tofMsg.SerializeAsString());
+						// std::vector<uint8_t> hash(picosha2::k_digest_size);
+						// picosha2::hash256(to_send[0].begin(), to_send[0].end(), hash.begin(), hash.end());
 
-						to_send[1] = picosha2::bytes_to_hex_string(hash.begin(), hash.end());
-						req.send_responses(to_send);
+						// to_send[1] = picosha2::bytes_to_hex_string(hash.begin(), hash.end());
+						// req.send_responses(to_send);
 
 						return;
 					}
 
 					if (command == "stop")
 					{
-						spdlog::debug(std::format("stop payload size: {}", req.payload.size()));
-						if (req.payload.size() != 2)
-						{
-							return;
-						}
+// 						spdlog::debug(std::format("stop payload size: {}", req.payload.size()));
+// 						if (req.payload.size() != 2)
+// 						{
+// 							return;
+// 						}
 
-						try
-						{
-							if (controller)
-							{
-#if TIMING_INFORMATION
-								auto t_0 = std::chrono::high_resolution_clock::now();
-#endif
-								auto stop_acquire = req.payload[1] == "acquire";
-								controller->stop(stop_acquire);
-#if TIMING_INFORMATION
-								auto t_1 = std::chrono::high_resolution_clock::now();
-								auto diff = std::chrono::duration_cast<std::chrono::milliseconds>(t_1 - t_0);
-								std::cout << "time to stop:" << diff.count() << "\n";
-#endif
-							}
-						}
-						catch (const std::exception& ex)
-						{
-							spdlog::error("Error when trying to stop acquisition loop: " + std::string(ex.what()));
-						}
-						catch (...)
-						{
-							spdlog::error("Unknown error when trying to stop acquisition loop");
-						}
+// 						try
+// 						{
+// 							if (controller)
+// 							{
+// #if TIMING_INFORMATION
+// 								auto t_0 = std::chrono::high_resolution_clock::now();
+// #endif
+// 								auto stop_acquire = req.payload[1] == "acquire";
+// 								controller->stop(stop_acquire);
+// #if TIMING_INFORMATION
+// 								auto t_1 = std::chrono::high_resolution_clock::now();
+// 								auto diff = std::chrono::duration_cast<std::chrono::milliseconds>(t_1 - t_0);
+// 								std::cout << "time to stop:" << diff.count() << "\n";
+// #endif
+// 							}
+// 						}
+// 						catch (const std::exception& ex)
+// 						{
+// 							spdlog::error("Error when trying to stop acquisition loop: " + std::string(ex.what()));
+// 						}
+// 						catch (...)
+// 						{
+// 							spdlog::error("Unknown error when trying to stop acquisition loop");
+// 						}
 
-						req.send_response(ack);
+// 						req.send_response(ack);
 						return;
 					}
 

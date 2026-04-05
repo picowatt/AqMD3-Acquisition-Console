@@ -17,6 +17,7 @@ add_library (core
 	src/uimf/uimfacquisitionrecord.cpp
 	src/server/server.cpp
 	src/massspec/toftiminginformation.cpp
+	src/acquisition/streamreader.cpp
 	include/message.pb.h
 	include/acquisitionpublisher.h
 	include/processsubject.h
