@@ -8,7 +8,7 @@
 
 #define WARN_ON_BUFFER_COUNT 3
 
-void AcquisitionController::start(UimfFrameParameters parameters)
+void AcquisitionController::start(UimfFrameParameters parameters, std::function<void(void)> on_scans_acquired = nullptr, std::function<void(void)> on_acquisition_completed = nullptr)
 {
 	try
 	{
@@ -56,6 +56,10 @@ void AcquisitionController::start(UimfFrameParameters parameters)
 							// notify(UimfAcquisitionRecord(parameters, data, scans_acquired_count), SubscriberType::BOTH);
 
 							// scans_acquired_count += data.stamps.size();
+							if (on_scans_acquired)
+							{
+								on_scans_acquired();
+							}
 						}
 						catch (const std::exception& ex)
 						{
@@ -78,7 +82,11 @@ void AcquisitionController::start(UimfFrameParameters parameters)
 				// zmq::message_t finished_msg(finished.size());
 				// memcpy((void *)finished_msg.data(), finished.c_str(), finished.size());
 				// publisher->send(finished_msg, subject, std::chrono::milliseconds::max());
-
+				if (on_acquisition_completed)
+				{
+					on_acquisition_completed();
+				}
+					
 				return;
 			});
 

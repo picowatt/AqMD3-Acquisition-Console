@@ -1,6 +1,7 @@
 #ifndef ACQUIRE_PUBLISHER_H
 #define ACQUIRE_PUBLISHER_H
 
+
 #include "acquisition/acquisitioncontrol.h"
 #include "acquisition/streamreader.h"
 #include "server/server.h"
@@ -9,8 +10,8 @@
 #include <thread>
 #include <atomic>
 #include <future>
+#include <functional>
 
-// public Publisher<UimfAcquisitionRecord>
 
 class AcquisitionController : public AcquisitionControl
 {
@@ -38,7 +39,7 @@ public:
 	{}
 	virtual ~AcquisitionController() = default;
 
-	void start(UimfFrameParameters parameters);
+	void start(UimfFrameParameters parameters, std::function<void(void)> on_scans_acquired = nullptr, std::function<void(void)> on_acquisition_completed = nullptr);
 	void stop(bool terminate_acquisition_chain) override;
 };
 
