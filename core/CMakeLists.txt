@@ -18,17 +18,18 @@ add_library (core
 	src/server/server.cpp
 	src/massspec/toftiminginformation.cpp
 	include/message.pb.h
-	include/acquirepublisher.h
-	include/acquisitioncontrol.h
+	include/acquisitionpublisher.h
 	include/processsubject.h
 	include/zmqacquireddatasubscriber.h
+	include/acquisitioncontroller.h
 	include/uimfframewritersubscriber.h
-	include/uimfacquisitionrecord.h
+	include/uimf/uimfacquisitionrecord.h
 	include/pubsub/publisher.h
 	include/pubsub/subscriber.h
 	include/server/server.h
+	include/acquisition/acquisitioncontrol.h
 	include/diagnostic/datageneratorcontext.h
-	include/massspec/toftiminginformation.h
+	include/mass_spec/toftiminginformation.h
 	include/util/timehelpers.h
 	include/util/uimfhelpers.h
 	)

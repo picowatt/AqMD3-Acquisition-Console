@@ -1,16 +1,17 @@
 #ifndef ACQUIRE_PUBLISHER_H
 #define ACQUIRE_PUBLISHER_H
 
-#include "pubsub/publisher.h"
-#include "acquisitioncontrol.h"
-#include "uimfacquisitionrecord.h"
+#include "acquisition/acquisitioncontrol.h"
 #include "server/server.h"
 #include <libaqmd3/streamingcontext.h>
 #include <vector>
 #include <thread>
 #include <atomic>
 
-class AcquirePublisher : public AcquisitionControl, public Publisher<UimfAcquisitionRecord> {
+// public Publisher<UimfAcquisitionRecord>
+
+class AcquisitionController : public AcquisitionControl
+{
 private:
 	std::unique_ptr<std::thread> worker_handle;//<
 	std::shared_ptr<StreamingContext> digitizer;
@@ -23,7 +24,7 @@ private:
 	std::string subject;
 
 public:
-	AcquirePublisher(std::shared_ptr<StreamingContext> digitizer, int64_t timeout, std::shared_ptr<AcquisitionBufferPool> buffer_pool,
+	AcquireControl(std::shared_ptr<StreamingContext> digitizer, int64_t timeout, std::shared_ptr<AcquisitionBufferPool> buffer_pool,
 		uint64_t segment_size,
 		std::shared_ptr<Server::Publisher> publisher)
 		: worker_handle()
@@ -35,11 +36,10 @@ public:
 		, publisher(publisher)
 		, subject("status")
 	{}
-	virtual ~AcquirePublisher() = default;
+	virtual ~AcquireControl() = default;
 
 	void start(UimfFrameParameters parameters);
 	void stop(bool terminate_acquisition_chain) override;
-
 };
 
 #endif // !ACQUIRE_PUBLISHER_H
