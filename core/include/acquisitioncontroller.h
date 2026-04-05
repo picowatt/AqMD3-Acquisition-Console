@@ -37,7 +37,7 @@ public:
 	//	, publisher(publisher)
 	//	, subject("status")
 	{}
-	virtual ~AcquisitionController() = default;
+	~AcquisitionController() = default;
 
 	void start(UimfFrameParameters parameters, std::function<void(void)> on_scans_acquired = nullptr, std::function<void(void)> on_acquisition_completed = nullptr);
 	void stop(bool terminate_acquisition_chain) override;

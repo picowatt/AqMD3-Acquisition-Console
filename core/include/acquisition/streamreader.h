@@ -23,7 +23,7 @@ private:
     
         AcquiredData read(uint64_t tof_scans_to_acquire) const;
 
-     virtual ~StreamReader() = default;
+     ~StreamReader() = default;
 };
 
 #endif
