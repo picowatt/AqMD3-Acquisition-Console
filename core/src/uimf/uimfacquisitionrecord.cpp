@@ -1,4 +1,4 @@
-#include "../include/uimfacquisitionrecord.h"
+#include "../../include/uimf/uimfacquisitionrecord.h"
 
 std::shared_ptr<UimfFrame> UimfAcquisitionRecord::to_frame() const
 {

@@ -8,7 +8,7 @@
 #include <UIMFWriter/uimfframe.h>
 #include "server/server.h"
 #include <zmq.hpp>
-#include "uimfacquisitionrecord.h"
+#include "uimf/uimfacquisitionrecord.h"
 #include <spdlog/spdlog.h>
 
 #define NOMINMAX 

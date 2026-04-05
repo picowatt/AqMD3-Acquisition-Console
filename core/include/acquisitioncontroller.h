@@ -2,11 +2,13 @@
 #define ACQUIRE_PUBLISHER_H
 
 #include "acquisition/acquisitioncontrol.h"
+#include "acquisition/streamreader.h"
 #include "server/server.h"
 #include <libaqmd3/streamingcontext.h>
 #include <vector>
 #include <thread>
 #include <atomic>
+#include <future>
 
 // public Publisher<UimfAcquisitionRecord>
 
@@ -14,29 +16,27 @@ class AcquisitionController : public AcquisitionControl
 {
 private:
 	std::unique_ptr<std::thread> worker_handle;//<
-	std::shared_ptr<StreamingContext> digitizer;
 	std::atomic_bool should_stop;//<
 	std::promise<State> stop_signal;//<
-	int64_t timeout;
-	std::shared_ptr<AcquisitionBufferPool> buffer_pool;
-	uint64_t segment_size;
-	std::shared_ptr<Server::Publisher> publisher;
-	std::string subject;
+
+	StreamReader stream_reader;
+
+	uint64_t tof_scans_to_acquire;
+	//std::shared_ptr<Server::Publisher> publisher;
+	//std::string subject;
 
 public:
-	AcquireControl(std::shared_ptr<StreamingContext> digitizer, int64_t timeout, std::shared_ptr<AcquisitionBufferPool> buffer_pool,
-		uint64_t segment_size,
-		std::shared_ptr<Server::Publisher> publisher)
+	AcquisitionController(StreamReader stream_reader, uint64_t tof_scans_to_acquire
+	//	std::shared_ptr<Server::Publisher> publisher
+	)
 		: worker_handle()
-		, digitizer(digitizer)
 		, should_stop(false)
-		, timeout(timeout)
-		, buffer_pool(buffer_pool)
-		, segment_size(segment_size)
-		, publisher(publisher)
-		, subject("status")
+		, stream_reader(stream_reader)
+		, tof_scans_to_acquire(tof_scans_to_acquire)
+	//	, publisher(publisher)
+	//	, subject("status")
 	{}
-	virtual ~AcquireControl() = default;
+	virtual ~AcquisitionController() = default;
 
 	void start(UimfFrameParameters parameters);
 	void stop(bool terminate_acquisition_chain) override;

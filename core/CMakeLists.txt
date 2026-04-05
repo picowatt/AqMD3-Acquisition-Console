@@ -10,11 +10,11 @@ find_package(spdlog CONFIG REQUIRED)
 
 add_library (core
 	src/message.pb.cpp
-	src/acquirepublisher.cpp
+	src/acquisitioncontroller.cpp
 	src/processsubject.cpp
 	src/zmqacquireddatasubscriber.cpp
 	src/uimfframewritersubscriber.cpp
-	src/uimfacquisitionrecord.cpp
+	src/uimf/uimfacquisitionrecord.cpp
 	src/server/server.cpp
 	src/massspec/toftiminginformation.cpp
 	include/message.pb.h
@@ -28,6 +28,7 @@ add_library (core
 	include/pubsub/subscriber.h
 	include/server/server.h
 	include/acquisition/acquisitioncontrol.h
+	include/acquisition/streamreader.h
 	include/diagnostic/datageneratorcontext.h
 	include/mass_spec/toftiminginformation.h
 	include/util/timehelpers.h

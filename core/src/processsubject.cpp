@@ -1,6 +1,6 @@
 #include "../include/processsubject.h"
 #include "../include/util//timehelpers.h"
-#include "../include/uimfacquisitionrecord.h"
+#include "../include/uimf/uimfacquisitionrecord.h"
 #include <numeric>
 #include <format>
 #include <spdlog/spdlog.h>

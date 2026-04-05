@@ -1,15 +1,14 @@
-#include "../include/acquirepublisher.h"
+#include "../include/acquisitioncontroller.h"
 #include <ctime>
 #include <chrono>
 #include <iostream>
 #include <spdlog/spdlog.h>
 #include <format>
 
-// TODO: move to config
-#define FREE_ON_BUFFER_COUNT 5
+
 #define WARN_ON_BUFFER_COUNT 3
 
-void AcquirePublisher::start(UimfFrameParameters parameters)
+void AcquisitionController::start(UimfFrameParameters parameters)
 {
 	try
 	{
@@ -29,13 +28,14 @@ void AcquirePublisher::start(UimfFrameParameters parameters)
 
 				state = State::ACQUIRING;
 
-				if (digitizer->get_is_acquiring())
+				// if (digitizer->get_is_acquiring())
+				if (false)
 				{
 					spdlog::warn("Error when trying to acquire frame while digitizer is already acquiring.");
 				}
 				else
 				{
-					digitizer->start();
+					// digitizer->start();
 					while (scans_acquired_count < scans_total_count)
 					{
 						if (has_errored || should_stop.load(std::memory_order_relaxed))
@@ -45,21 +45,17 @@ void AcquirePublisher::start(UimfFrameParameters parameters)
 
 						try
 						{
-							auto available = buffer_pool->get_available_buffers();
-							if (available <= WARN_ON_BUFFER_COUNT)
-							{
-								spdlog::warn("Available buffer count {}", available);
-							}
+							// auto available = buffer_pool->get_available_buffers();
 
-							uint64_t to_acquire_count = (scans_total_count - scans_acquired_count) < segment_size
-								? (scans_total_count - scans_acquired_count)
-								: segment_size;
+							uint64_t to_acquire_count = (scans_total_count - scans_acquired_count) < tof_scans_to_acquire
+															? (scans_total_count - scans_acquired_count)
+															: tof_scans_to_acquire;
 
-							auto data = digitizer->acquire(to_acquire_count, std::chrono::milliseconds(this->timeout));
+							// auto data = digitizer->acquire(to_acquire_count, std::chrono::milliseconds(this->timeout));
 
-							notify(UimfAcquisitionRecord(parameters, data, scans_acquired_count), SubscriberType::BOTH);
+							// notify(UimfAcquisitionRecord(parameters, data, scans_acquired_count), SubscriberType::BOTH);
 
-							scans_acquired_count += data.stamps.size();
+							// scans_acquired_count += data.stamps.size();
 						}
 						catch (const std::exception& ex)
 						{
@@ -75,13 +71,13 @@ void AcquirePublisher::start(UimfFrameParameters parameters)
 				}
 
 				state = State::STOPPED;
-				digitizer->stop();
+				// digitizer->stop();
 				spdlog::info(std::format("Scans acquired: {}", scans_acquired_count));
 
-				std::string finished = "finished";
-				zmq::message_t finished_msg(finished.size());
-				memcpy((void *)finished_msg.data(), finished.c_str(), finished.size());
-				publisher->send(finished_msg, subject, std::chrono::milliseconds::max());
+				// std::string finished = "finished";
+				// zmq::message_t finished_msg(finished.size());
+				// memcpy((void *)finished_msg.data(), finished.c_str(), finished.size());
+				// publisher->send(finished_msg, subject, std::chrono::milliseconds::max());
 
 				return;
 			});
@@ -98,7 +94,7 @@ void AcquirePublisher::start(UimfFrameParameters parameters)
 	}
 }
 
-void AcquirePublisher::stop(bool terminate_acquisition_chain)
+void AcquisitionController::stop(bool terminate_acquisition_chain)
 {
 	try
 	{
@@ -112,11 +108,11 @@ void AcquirePublisher::stop(bool terminate_acquisition_chain)
 		if (terminate_acquisition_chain)
 		{
 			//Should invalidate this class and make it so it can't be used again
-			notify_completed_and_wait();
-			std::string finished = "finished acquire";
-			zmq::message_t finished_msg(finished.size());
-			memcpy((void*)finished_msg.data(), finished.c_str(), finished.size());
-			publisher->send(finished_msg, subject, std::chrono::seconds(30));
+			// notify_completed_and_wait();
+			// std::string finished = "finished acquire";
+			// zmq::message_t finished_msg(finished.size());
+			// memcpy((void*)finished_msg.data(), finished.c_str(), finished.size());
+			// publisher->send(finished_msg, subject, std::chrono::seconds(30));
 		}
 
 		if (worker_handle && worker_handle->joinable()) {
