@@ -4,6 +4,7 @@
 #include <UIMFWriter/uimfframe.h>
 #include <iostream>
 #include <atomic>
+#include <functional>
 
 #define NOMINMAX 
 #undef min
@@ -30,7 +31,7 @@ public:
 
 	virtual ~AcquisitionControl() = default;
 
-	virtual void start(UimfFrameParameters parameters) = 0;
+	virtual void start(UimfFrameParameters parameters, std::function<void(void)> on_scans_acquired = nullptr, std::function<void(void)> on_acquisition_completed = nullptr) = 0;
 	virtual void stop(bool stop_acquisition_chain) = 0;
 
 	inline bool is_acquiring() { return state == State::ACQUIRING; }

@@ -7,6 +7,7 @@
 #include <future>
 #include <spdlog/spdlog.h>
 #include <iostream>
+#include <exception>
 using std::cerr;
 
 enum class SubscriberType : uint8_t
@@ -29,23 +30,29 @@ constexpr enum SubscriberType operator&(const enum SubscriberType left, const en
 template <typename T>
 class Subscriber {
 private:
-	std::condition_variable sig;
-	std::mutex sig_sync;
 	std::thread worker_handle;
+	std::condition_variable sig;
+	std::mutex sig_mutex;
+
 	std::promise<void> has_completed;
 	std::shared_future<void> stop_fut;
-	bool is_running; // TODO: make this atomic
+	
+	bool is_running;
+	
 	std::deque<T> protected_queue;
-	std::mutex queue_sync;
+	std::mutex protected_queue_mutex;
+
+	bool drain_queue_on_stop;
 
 protected:
 	std::deque<T> items;
 
 public:
-	Subscriber()
+	Subscriber(bool drain_queue_on_stop = true)
 		: items()
 		, worker_handle()
 		, is_running(false)
+		, drain_queue_on_stop(drain_queue_on_stop)
 	{}
 
 	virtual ~Subscriber()
@@ -57,7 +64,6 @@ public:
 
 	std::shared_future<void> setup(std::shared_future<void> pub_stop)
 	{
-		// For now just set the last publishers shared_future, adding a race condition
 		this->stop_fut = pub_stop;
 
 		if (!is_running)
@@ -65,15 +71,31 @@ public:
 			worker_handle = std::thread([&]()
 			{
 				is_running = true;
-				while (stop_fut.wait_for(std::chrono::seconds(0)) != std::future_status::ready || !items.empty() || !protected_queue.empty())
+				while (true)
 				{
+					if (stop_fut.wait_for(std::chrono::seconds(0)) == std::future_status::ready)
 					{
-						std::unique_lock<std::mutex> lock(sig_sync);
+						if (!drain_queue_on_stop)
+						{
+							break;
+						}
+
+						{
+							const std::lock_guard<std::mutex> lock(protected_queue_mutex);
+							if (protected_queue.empty() && items.empty())
+							{
+								break;
+							}
+						}
+					}
+
+					{
+						std::unique_lock<std::mutex> lock(sig_mutex);
 						sig.wait_for(lock, std::chrono::milliseconds(10));
 					}
 
 					{
-						const std::lock_guard<std::mutex> lock(queue_sync);
+						const std::lock_guard<std::mutex> lock(protected_queue_mutex);
 						for (int i = 0; i < protected_queue.size(); i++)
 						{
 							items.push_back(protected_queue.front());
@@ -85,11 +107,25 @@ public:
 					{
 						T item = items.front();
 						items.pop_front();
-						on_notify(item);
+						try
+						{
+							on_notify(item);
+						}
+						catch (const std::exception &ex)
+						{
+							continue;
+						}
 					}
 				}
+				try
+				{
+					on_completed();
+				}
+				catch (const std::exception &ex)
+				{
+					continue;
+				}
 
-				on_completed();
 				has_completed.set_value();
 			});
 		}
@@ -98,7 +134,7 @@ public:
 
 	inline void update(T item)
 	{
-		const std::lock_guard<std::mutex> lock(queue_sync);
+		const std::lock_guard<std::mutex> lock(protected_queue_mutex);
 		protected_queue.push_back(item);
 		sig.notify_one();
 	}
