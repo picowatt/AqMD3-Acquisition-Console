@@ -4,7 +4,6 @@
 
 #include "acquisition/acquisitioncontrol.h"
 #include "acquisition/streamreader.h"
-#include "server/server.h"
 #include <libaqmd3/streamingcontext.h>
 #include <vector>
 #include <thread>

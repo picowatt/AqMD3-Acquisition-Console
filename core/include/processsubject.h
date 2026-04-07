@@ -3,18 +3,13 @@
 
 #include "pubsub/subscriber.h"
 #include "pubsub/publisher.h"
+#include "uimf/uimfacquisitionrecord.h"
+
 #include <libaqmd3/acquireddata.h>
 #include <UIMFWriter/encodedresult.h>
 #include <UIMFWriter/uimfframe.h>
-#include "server/server.h"
-#include <zmq.hpp>
-#include "uimf/uimfacquisitionrecord.h"
-#include <spdlog/spdlog.h>
 
-#define NOMINMAX 
-#undef min
-#undef max
-#include "message.pb.h"
+#include <spdlog/spdlog.h>
 
 using frame_ptr = std::shared_ptr<UimfFrame>;
 

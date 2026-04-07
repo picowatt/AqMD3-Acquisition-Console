@@ -11,18 +11,32 @@ find_library(VISA_LIBRARY
     NO_DEFAULT_PATH
 )
 
+find_path(PICOSHA2_INCLUDE_DIRS "picosha2.h")
+find_package(cppzmq CONFIG REQUIRED) 
+find_package(protobuf CONFIG REQUIRED)
+find_package(Snappy CONFIG REQUIRED)
+
 add_executable (AqMD3_console 
 	src/aqmd3_console.cpp
+	src/zmqacquireddatasubscriber.cpp
+	src/message.pb.cpp
 	include/definitions.h
 	include/config/config.h   
+	include/zmqacquireddatasubscriber.h
+	include/message.pb.h
+	include/server/server.h
+	include/util/uimfhelpers.h
 	)
 
 target_include_directories(AqMD3_console PUBLIC ${VISA_INCLUDE_DIR})
+target_include_directories(AqMD3_console PRIVATE ${PICOSHA2_INCLUDE_DIRS})
 
 target_link_libraries(AqMD3_console PRIVATE ${VISA_LIBRARY})
-
 target_link_libraries (AqMD3_console PUBLIC i::core)
 target_link_libraries(AqMD3_console PRIVATE spdlog::spdlog spdlog::spdlog_header_only)
+target_link_libraries(AqMD3_console PRIVATE cppzmq cppzmq-static)
+target_link_libraries(AqMD3_console PRIVATE protobuf::libprotoc protobuf::libprotobuf protobuf::libprotobuf-lite)
+target_link_libraries(AqMD3_console PRIVATE Snappy::snappy)
 
 add_custom_command(TARGET AqMD3_console PRE_BUILD
 	COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/config.txt $<TARGET_FILE_DIR:AqMD3_console>

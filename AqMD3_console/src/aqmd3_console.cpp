@@ -1,15 +1,17 @@
-﻿#include <server/server.h>
-#include <acquisitioncontroller.h>
-#include <acquisitionpublisher.h>
-#include <uimfframewritersubscriber.h>
-#include <zmqacquireddatasubscriber.h>
-#include <processsubject.h>
+﻿#include "../include/server/server.h"
+#include "../include/acquisitioncontroller.h"
+#include "../include/zmqacquireddatasubscriber.h"
 #include "../include/definitions.h"
 #include "../include/config/config.h"
-#include <util/uimfhelpers.h>
-#include <message.pb.h>
-#include <mass_spec/toftiminginformation.h>
+#include "../include/util/uimfhelpers.h"
+#include "../include/message.pb.h"
+
 #include "include/app.h"
+
+#include <processsubject.h>
+#include <acquisitionpublisher.h>
+#include <uimfframewritersubscriber.h>
+#include <mass_spec/toftiminginformation.h>
 
 #include <libaqmd3/digitizer.h>
 #include <libaqmd3/acquireddata.h>
