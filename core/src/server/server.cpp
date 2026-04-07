@@ -1,10 +1,5 @@
 #include "../../include/server/server.h"
 
-#define NOMINMAX 
-#undef min
-#undef max
-#include "../include/message.pb.h"
-
 #include <map>
 
 static inline bool send(zmq::socket_t& socket, const std::string& message) {
