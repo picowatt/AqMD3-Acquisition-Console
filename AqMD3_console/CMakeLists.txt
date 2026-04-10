@@ -16,12 +16,13 @@ find_package(cppzmq CONFIG REQUIRED)
 find_package(protobuf CONFIG REQUIRED)
 find_package(Snappy CONFIG REQUIRED)
 find_package(nlohmann_json CONFIG REQUIRED)
-find_package(asio CONFIG REQUIRED)
+# find_package(asio CONFIG REQUIRED)
 
 add_executable (AqMD3_console 
 	src/aqmd3_console.cpp
 	src/zmqacquireddatasubscriber.cpp
 	src/message.pb.cpp
+	src/server/server.cpp
 	include/definitions.h
 	include/config/config.h   
 	include/zmqacquireddatasubscriber.h
@@ -40,7 +41,7 @@ target_link_libraries(AqMD3_console PRIVATE cppzmq cppzmq-static)
 target_link_libraries(AqMD3_console PRIVATE protobuf::libprotoc protobuf::libprotobuf protobuf::libprotobuf-lite)
 target_link_libraries(AqMD3_console PRIVATE Snappy::snappy)
 target_link_libraries(AqMD3_console PRIVATE nlohmann_json::nlohmann_json)
-target_link_libraries(AqMD3_console PRIVATE asio::asio)
+# target_link_libraries(AqMD3_console PRIVATE asio::asio)
 
 add_custom_command(TARGET AqMD3_console PRE_BUILD
 	COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/config.txt $<TARGET_FILE_DIR:AqMD3_console>
