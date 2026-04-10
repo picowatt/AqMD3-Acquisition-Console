@@ -11,7 +11,9 @@
     "picosha2",
     "spdlog",
     "tbb",
-    "cxxopts"
+    "cxxopts",
+    "asio",
+    "nlohmann-json"
   ],
   "builtin-baseline": "9b9928a957d2dbe705773615684091fd958c64c1",
   "overrides": [
