@@ -217,7 +217,7 @@ int main(int argc, char *argv[]) {
 		std::unique_ptr<SA220> digitizer = std::make_unique<SA220>(resource_name, false);
 #endif
 
-		auto server = new Server("tcp://*:5555");
+		auto server = new ServerZmq("tcp://*:5555");
 		double sampling_rate = 0.0;
 		// std::unique_ptr<AcquisitionControl> controller;
 		// std::shared_ptr<AcquisitionBufferPool> buffer_pool = nullptr;
@@ -229,7 +229,7 @@ int main(int argc, char *argv[]) {
 // 		std::shared_ptr<UimfFrameWriterSubscriber> frame_writer = std::make_shared<UimfFrameWriterSubscriber>(false);
 // #endif // reusable_pub_sub
 
-		server->register_handler([&](Server::ReceivedRequest req)
+		server->register_handler([&](ServerZmq::ReceivedRequest req)
 			{
 				for (const auto& command : req.payload)
 				{
