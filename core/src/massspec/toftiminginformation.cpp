@@ -34,7 +34,7 @@ uint64_t TofTimingInformation::get_trigger_time_stamp_average(const SA220 *digit
 
 std::tuple<uint64_t, uint64_t, uint64_t> TofTimingInformation::get_optimal_record_size(const SA220 *digitizer, uint64_t pusher_pulse_pulse_width_samples, double post_trigger_delay_s, double sample_rate, double trig_rearm_s)
 {
-    uint64_t actual_trigger_width_samples = uint64_t(double(pusher_pulse_pulse_width_samples) * (sample_rate / digitizer->max_sample_rate));
+    uint64_t actual_trigger_width_samples = uint64_t(double(pusher_pulse_pulse_width_samples) * (sample_rate / digitizer->sample_rate_2GS));
     uint64_t trig_rearm_samples = uint64_t(trig_rearm_s * sample_rate);
     uint64_t delay_samples = uint64_t(post_trigger_delay_s * sample_rate);
 
