@@ -1,4 +1,4 @@
-#include "../../include/server/server.h"
+#include "../../include/server/server_zmq.h"
 
 #include <map>
 
@@ -16,7 +16,7 @@ static inline bool send_more(zmq::socket_t& socket, const std::string& message) 
 	return socket.send(zmq_msg, ZMQ_SNDMORE);
 }
 
-void Server::respond(const std::string& client, const std::string& response) {
+void ServerZmq::respond(const std::string& client, const std::string& response) {
 	// addr frame
 	send_more(router, client);
 	// null frame
@@ -25,7 +25,7 @@ void Server::respond(const std::string& client, const std::string& response) {
 	send(router, response);
 }
 
-void Server::respond_more(const std::string& client, const std::vector<std::string>& responses) {
+void ServerZmq::respond_more(const std::string& client, const std::vector<std::string>& responses) {
 	
 	if (responses.size() == 0)
 		return;
@@ -45,7 +45,7 @@ void Server::respond_more(const std::string& client, const std::vector<std::stri
 	send(router, responses.back());
 }
 
-std::tuple<std::string, std::vector<std::string>> Server::receive() {
+std::tuple<std::string, std::vector<std::string>> ServerZmq::receive() {
 	zmq::message_t message;
 	std::vector<std::string> payload;
 
@@ -71,7 +71,7 @@ std::tuple<std::string, std::vector<std::string>> Server::receive() {
 	return std::make_tuple(client, payload);
 }
 
-void Server::run() 
+void ServerZmq::run() 
 {
 	should_run = true;
 
@@ -99,23 +99,23 @@ void Server::run()
 	}
 }
 
-void Server::stop() {
+void ServerZmq::stop() {
 	should_run = false;
 }
 
-void Server::register_handler(std::function<void(const ReceivedRequest)> handler)
+void ServerZmq::register_handler(std::function<void(const ReceivedRequest)> handler)
 {
 	message_handler = handler;
 }
 
-std::shared_ptr<Server::Publisher> Server::get_publisher(std::string address)
+std::shared_ptr<ServerZmq::Publisher> ServerZmq::get_publisher(std::string address)
 {
 	auto publisher = publishers[address].lock();
 	if (!publisher)
 	{
 		zmq::socket_t sock(context, ZMQ_PUB);
 		sock.bind(address);
-		publishers[address] = publisher = std::make_shared<Server::Publisher>(std::move(sock), address);
+		publishers[address] = publisher = std::make_shared<ServerZmq::Publisher>(std::move(sock), address);
 	}
 	return publisher;
 }

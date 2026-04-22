@@ -1,4 +1,4 @@
-﻿#include "../include/server/server.h"
+﻿#include "../include/server/server_zmq.h"
 #include "../include/acquisitioncontroller.h"
 #include "../include/zmqacquireddatasubscriber.h"
 #include "../include/definitions.h"
