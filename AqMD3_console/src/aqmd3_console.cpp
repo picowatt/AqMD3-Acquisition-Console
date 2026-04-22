@@ -15,7 +15,7 @@
 
 #include <libaqmd3/digitizer.h>
 #include <libaqmd3/acquireddata.h>
-#include <libaqmd3/sa220.h>
+#include <libaqmd3/digitizers/sa220.h>
 
 #include <UIMFWriter/uimfwriter.h>
 

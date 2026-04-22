@@ -1,5 +1,5 @@
 #pragma once
-#include <libaqmd3/sa220.h>
+#include <libaqmd3/digitizers/sa220.h>
 #include <iostream>
 #include <tuple>
 

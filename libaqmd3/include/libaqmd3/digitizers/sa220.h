@@ -86,16 +86,17 @@ public:
 template <>
 struct DeviceConstants<SA220>
 {
-	static std::unordered_map<DigitizerConfigurableType, std::variant<std::vector<std::string>, std::vector<double>>> get_device_constants_map()
+	static DeviceConstantsMap get_device_constants_map()
 	{
-		auto device_constants = std::unordered_map<DigitizerConfigurableType, std::variant<std::vector<std::string>, std::vector<double>>>{
+		auto device_constants = DeviceConstantsMap {
 			{DigitizerConfigurableType::ChannelValues, std::vector<std::string>{SA220::channel_1, SA220::channel_2}},
 			{DigitizerConfigurableType::SampleChannelValues, std::vector<std::string>{SA220::samples_channel_1, SA220::samples_channel_2}},
 			{DigitizerConfigurableType::MarkersChannelValues, std::vector<std::string>{SA220::markers_channel_1, SA220::markers_channel_2}},
 			{DigitizerConfigurableType::TriggerValues, std::vector<std::string>{SA220::trigger_internal_1, SA220::trigger_internal_2, SA220::trigger_external, SA220::trigger_software, SA220::trigger_self}},
 			{DigitizerConfigurableType::ControlIOValues, std::vector<std::string>{SA220::control_io_1, SA220::control_io_2, SA220::control_io_3}},
-			{DigitizerConfigurableType::FullScaleRangeValues, std::vector<std::string>{SA220::full_scale_range_0_5v, SA220::full_scale_range_2_5v}},
-			{DigitizerConfigurableType::SampleRateValues, std::vector<std::string>{SA220::sample_rate_1GS, SA220::sample_rate_2GS}}};
+			{DigitizerConfigurableType::FullScaleRangeValues, std::vector<double>{SA220::full_scale_range_0_5v, SA220::full_scale_range_2_5v}},
+			{DigitizerConfigurableType::SampleRateValues, std::vector<double>{SA220::sample_rate_1GS, SA220::sample_rate_2GS}}
+		};
 
 		return device_constants;
 	}
