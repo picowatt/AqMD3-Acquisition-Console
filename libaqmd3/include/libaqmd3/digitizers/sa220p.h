@@ -1,11 +1,11 @@
-#ifndef SA220_H
-#define SA220_H
+#ifndef SA220P_H
+#define SA220P_H
 
 #include "../digitizer.h"
 #include "../devicevalues/deviceconstants.h"
 
 
-class SA220 : public Digitizer {
+class SA220P : public Digitizer {
 public:
 	 typedef struct Info{
 		std::string instrument_model;
@@ -61,7 +61,7 @@ private:
 	}
 
 public:
-	SA220(std::string device_handle, bool simulate_device) : Digitizer(device_handle, simulate_device, "SA220P")
+	SA220P(std::string device_handle, bool simulate_device) : Digitizer(device_handle, simulate_device, "SA220P")
 	{
 		digitizer_info = get_digitizer_info();
 	}
@@ -102,4 +102,4 @@ struct DeviceConstants<SA220>
 	}
 };
 
-#endif // !SA220_H
+#endif // !SA220P_H

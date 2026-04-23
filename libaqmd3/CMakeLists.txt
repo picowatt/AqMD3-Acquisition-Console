@@ -22,7 +22,7 @@ add_library (libaqmd3
 	src/acquireddata.cpp
 	src/cstzs1context.cpp
 	src/cstcontext.cpp
-	src/digitizers/sa220.cpp
+	src/digitizers/sa220p.cpp
 	src/acquisitionbufferpool.cpp
 	include/libaqmd3/digitizer.h
 	include/libaqmd3/acquisitionbuffer.h
@@ -30,7 +30,7 @@ add_library (libaqmd3
 	include/libaqmd3/cstzs1context.h
 	include/libaqmd3/cstcontext.h
 	include/libaqmd3/acquireddata.h
-	include/libaqmd3/digitizers/sa220.h
+	include/libaqmd3/digitizers/sa220p.h
 	include/libaqmd3/acquisitionbufferpool.h
  	include/libaqmd3/helpers.h
 	include/libaqmd3/devicevalues/deviceconstants.h

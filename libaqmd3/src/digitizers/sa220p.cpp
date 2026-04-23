@@ -1,21 +1,21 @@
-#include "../../include/libaqmd3/digitizers/sa220.h"
+#include "../../include/libaqmd3/digitizers/sa220p.h"
 #include "../include/libaqmd3/cstcontext.h"
 #include "../include/libaqmd3/cstzs1context.h"
 #include "../include/libaqmd3/helpers.h"
 #include <stdexcept>
 #include <cstring>
 
-void SA220::set_sampling_rate(double rate) const
+void SA220P::set_sampling_rate(double rate) const
 {
 	check_and_throw_on_error(configure_sample_rate(rate));
 }
 
-void SA220::set_record_size(uint64_t elements) const
+void SA220P::set_record_size(uint64_t elements) const
 {
 	check_and_throw_on_error(configure_record_size(elements));
 }
 
-void SA220::set_trigger_parameters(std::string trigger, double level, bool isRisingEdgeTriggered, double trigger_delay_s) const
+void SA220P::set_trigger_parameters(std::string trigger, double level, bool isRisingEdgeTriggered, double trigger_delay_s) const
 {
 	ViInt32 slope = isRisingEdgeTriggered ? AQMD3_VAL_TRIGGER_SLOPE_POSITIVE : AQMD3_VAL_TRIGGER_SLOPE_NEGATIVE;
 
@@ -25,36 +25,36 @@ void SA220::set_trigger_parameters(std::string trigger, double level, bool isRis
 	check_and_throw_on_error(configure_trigger_delay(trigger_delay_s));
 }
 
-void SA220::set_channel_parameters(std::string channel, double range, double offset) const
+void SA220P::set_channel_parameters(std::string channel, double range, double offset) const
 {
 	check_and_throw_on_error(configure_channel(channel.c_str(), range, offset, AQMD3_VAL_VERTICAL_COUPLING_DC));
 }
 
-void SA220::set_channel_data_inversion(std::string channel, bool enable) const
+void SA220P::set_channel_data_inversion(std::string channel, bool enable) const
 {
 	check_and_throw_on_error(configure_channel_data_inversion(channel.c_str(), enable));
 }
 
 
-void SA220::enable_io_port(const std::string& io_port) const
+void SA220P::enable_io_port(const std::string& io_port) const
 {
 	std::string enable_string("In-TriggerEnable");
 	check_and_throw_on_error(configure_io_port(io_port.c_str(), enable_string.c_str()));
 }
 
-void SA220::disable_io_port(const std::string& io_port) const
+void SA220P::disable_io_port(const std::string& io_port) const
 {
 	std::string disable_string("Disabled");
 	check_and_throw_on_error(configure_io_port(io_port.c_str(), disable_string.c_str()));
 }
 
-bool SA220::get_is_idle() const
+bool SA220P::get_is_idle() const
 {
 	auto result = check_and_throw_on_error<int>(Digitizer::get_is_idle());
 	return result == AQMD3_VAL_ACQUISITION_STATUS_RESULT_TRUE;
 }
 
-std::shared_ptr<StreamingContext> SA220::configure_cst(std::string channel, std::shared_ptr<AcquisitionBufferPool> buffer_pool) const
+std::shared_ptr<StreamingContext> SA220P::configure_cst(std::string channel, std::shared_ptr<AcquisitionBufferPool> buffer_pool) const
 {
 	check_and_throw_on_error(configure_streaming_mode(AQMD3_VAL_STREAMING_MODE_TRIGGERED));
 	check_and_throw_on_error(configure_acquisition_mode(AQMD3_VAL_ACQUISITION_MODE_NORMAL));
@@ -72,7 +72,7 @@ std::shared_ptr<StreamingContext> SA220::configure_cst(std::string channel, std:
 	return std::make_shared<CstContext>(dynamic_cast<const Digitizer&>(*this), channel, buffer_pool);
 }
 
-std::shared_ptr<StreamingContext> SA220::configure_cst(std::string channel, std::shared_ptr<AcquisitionBufferPool> buffer_pool, ZeroSuppressParameters parameters) const
+std::shared_ptr<StreamingContext> SA220P::configure_cst(std::string channel, std::shared_ptr<AcquisitionBufferPool> buffer_pool, ZeroSuppressParameters parameters) const
 {
 	check_and_throw_on_error(configure_streaming_mode(AQMD3_VAL_STREAMING_MODE_TRIGGERED));
 	check_and_throw_on_error(configure_data_reduction(AQMD3_VAL_ACQUISITION_DATA_REDUCTION_MODE_ZERO_SUPPRESS));
