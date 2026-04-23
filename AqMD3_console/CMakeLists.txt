@@ -36,7 +36,7 @@ target_include_directories(AqMD3_console PUBLIC ${VISA_INCLUDE_DIR})
 target_include_directories(AqMD3_console PRIVATE ${PICOSHA2_INCLUDE_DIRS})
 
 target_link_libraries(AqMD3_console PRIVATE ${VISA_LIBRARY})
-target_link_libraries (AqMD3_console PUBLIC i::core)
+target_link_libraries(AqMD3_console PUBLIC i::core)
 target_link_libraries(AqMD3_console PRIVATE spdlog::spdlog spdlog::spdlog_header_only)
 target_link_libraries(AqMD3_console PRIVATE cppzmq cppzmq-static)
 target_link_libraries(AqMD3_console PRIVATE protobuf::libprotoc protobuf::libprotobuf protobuf::libprotobuf-lite)
