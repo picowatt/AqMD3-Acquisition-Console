@@ -1,7 +1,7 @@
 #include "../../include/mass_spec/toftiminginformation.h"
 
 
-TofTimingInformation TofTimingInformation::create_timing_information(const SA220P *digitizer, double sample_rate, double post_trigger_delay_seconds, double trigger_rearm_time_seconds)
+TofTimingInformation TofTimingInformation::create_timing_information(const aqmd3::SA220P *digitizer, double sample_rate, double post_trigger_delay_seconds, double trigger_rearm_time_seconds)
 {
     auto samples_per_trigger = TofTimingInformation::get_trigger_time_stamp_average(digitizer, 20);
     auto t = TofTimingInformation::get_optimal_record_size(digitizer, samples_per_trigger, post_trigger_delay_seconds, sample_rate, trigger_rearm_time_seconds);
@@ -10,14 +10,14 @@ TofTimingInformation TofTimingInformation::create_timing_information(const SA220
         post_trigger_delay_seconds, trigger_rearm_time_seconds);
 }
 
-uint64_t TofTimingInformation::get_trigger_time_stamp_average(const SA220P *digitizer, int triggers)
+uint64_t TofTimingInformation::get_trigger_time_stamp_average(const aqmd3::SA220P *digitizer, int triggers)
 {
     uint64_t record_size = 1024;
     digitizer->set_record_size(record_size);
-    auto dig_context = digitizer->configure_cst(digitizer->channel_1, std::make_shared<AcquisitionBufferPool>(triggers, record_size, 10, 10));
+    auto dig_context = digitizer->configure_cst(digitizer->channel_1, std::make_shared<aqmd3::AcquisitionBufferPool>(triggers, record_size, 10, 10));
 
     dig_context->start();
-    AcquiredData result = dig_context->acquire(triggers, std::chrono::milliseconds(80));
+    aqmd3::AcquiredData result = dig_context->acquire(triggers, std::chrono::milliseconds(80));
     dig_context->stop();
 
     uint64_t total = 0;
@@ -32,7 +32,7 @@ uint64_t TofTimingInformation::get_trigger_time_stamp_average(const SA220P *digi
     return total;
 }
 
-std::tuple<uint64_t, uint64_t, uint64_t> TofTimingInformation::get_optimal_record_size(const SA220P *digitizer, uint64_t pusher_pulse_pulse_width_samples, double post_trigger_delay_s, double sample_rate, double trig_rearm_s)
+std::tuple<uint64_t, uint64_t, uint64_t> TofTimingInformation::get_optimal_record_size(const aqmd3::SA220P *digitizer, uint64_t pusher_pulse_pulse_width_samples, double post_trigger_delay_s, double sample_rate, double trig_rearm_s)
 {
     uint64_t actual_trigger_width_samples = uint64_t(double(pusher_pulse_pulse_width_samples) * (sample_rate / digitizer->sample_rate_2GS));
     uint64_t trig_rearm_samples = uint64_t(trig_rearm_s * sample_rate);

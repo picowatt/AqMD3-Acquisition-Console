@@ -1,9 +1,13 @@
 #include "../include/libaqmd3/helpers.h"
 
-void check_and_throw_on_error(std::pair<std::string, enum Digitizer::ErrorType> err)
+
+namespace aqmd3
 {
-	if (err.second == Digitizer::Error)
+	void check_and_throw_on_error(std::pair<std::string, enum Digitizer::ErrorType> err)
 	{
-		throw std::runtime_error(std::format("Error during call to digitizer. {}", err.first));
+		if (err.second == Digitizer::Error)
+		{
+			throw std::runtime_error(std::format("Error during call to digitizer. {}", err.first));
+		}
 	}
 }

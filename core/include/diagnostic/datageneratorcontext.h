@@ -9,14 +9,15 @@
 #include <thread>
 #include <chrono>
 
-class DataGeneratorContext : public StreamingContext {
+class DataGeneratorContext : public aqmd3::StreamingContext
+{
 private:
 	uint64_t tof_width;
 	uint64_t acq_count;
 	//uint64_t triggers_per_read;
 
 public:
-	DataGeneratorContext(const Digitizer& digitizer, std::string channel, uint64_t triggers_per_read, std::shared_ptr<AcquisitionBufferPool> buffer_pool)
+	DataGeneratorContext(const aqmd3::Digitizer& digitizer, std::string channel, uint64_t triggers_per_read, std::shared_ptr<aqmd3::AcquisitionBufferPool> buffer_pool)
 		: StreamingContext(digitizer, channel, buffer_pool)
 		, tof_width(200000)
 		, acq_count(0)
@@ -30,11 +31,11 @@ public:
 	{
 	}
 
-	AcquiredData acquire(uint64_t triggers_per_read, std::chrono::milliseconds timeoutMs) override
+	aqmd3::AcquiredData acquire(uint64_t triggers_per_read, std::chrono::milliseconds timeoutMs) override
 	{
 		std::this_thread::sleep_for(std::chrono::milliseconds(int(0.1*triggers_per_read)));
-		std::vector<AcquiredData::TriggerData> trigger_data;
-		
+		std::vector<aqmd3::AcquiredData::TriggerData> trigger_data;
+
 		for (int i = 0; i < triggers_per_read; i++)
 		{
 			trigger_data.emplace_back(acq_count++ * tof_width, acq_count, 0.0);
@@ -49,7 +50,7 @@ public:
 		}
 		buffer->advance_acquired(400);
 
-		return AcquiredData(trigger_data, buffer, 800);
+		return aqmd3::AcquiredData(trigger_data, buffer, 800);
 	};
 };
 

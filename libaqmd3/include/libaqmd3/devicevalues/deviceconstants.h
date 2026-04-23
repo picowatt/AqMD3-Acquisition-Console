@@ -7,17 +7,19 @@
 #include <string>
 #include <vector>
 
-
-using DeviceConstantsTypeMap = std::variant<std::vector<std::string>, std::vector<double>>;
-using DeviceConstantsMap = std::unordered_map<DigitizerConfigurableType, DeviceConstantsTypeMap>;
-
-template <typename T>
-struct DeviceConstants;
-
-template <typename T>
-DeviceConstantsMap get_device_constants_map()
+namespace aqmd3 
 {
-    return DeviceConstants<T>::get_device_constants_map();
+    using DeviceConstantsTypeMap = std::variant<std::vector<std::string>, std::vector<double>>;
+    using DeviceConstantsMap = std::unordered_map<DigitizerConfigurableType, DeviceConstantsTypeMap>;
+
+    template <typename T>
+    struct DeviceConstants;
+
+    template <typename T>
+    DeviceConstantsMap get_device_constants_map()
+    {
+        return DeviceConstants<T>::get_device_constants_map();
+    }
 }
 
 #endif

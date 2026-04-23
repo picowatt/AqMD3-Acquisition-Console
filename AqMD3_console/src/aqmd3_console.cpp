@@ -212,9 +212,9 @@ int main(int argc, char *argv[]) {
 		}
 
 #if TEST_ACQUIRE
-		std::unique_ptr<SA220P> digitizer = std::make_unique<SA220P>(resource_name, true);
+		std::unique_ptr<aqmd3::SA220P> digitizer = std::make_unique<aqmd3::SA220P>(resource_name, true);
 #else
-		std::unique_ptr<SA220P> digitizer = std::make_unique<SA220P>(resource_name, false);
+		std::unique_ptr<aqmd3::SA220P> digitizer = std::make_unique<aqmd3::SA220P>(resource_name, false);
 #endif
 
 		auto server = new ServerZmq("tcp://*:5555");
@@ -527,7 +527,7 @@ int main(int argc, char *argv[]) {
 						if (req.payload.size() == 2)
 						{
 							auto val = std::stoi(req.payload[1]);
-							digitizer->enable_io_port(SA220P::control_io_2);
+							digitizer->enable_io_port(aqmd3::SA220P::control_io_2);
 						}
 
 						req.send_response(ack);
@@ -539,7 +539,7 @@ int main(int argc, char *argv[]) {
 						if (req.payload.size() == 2)
 						{
 							auto val = std::stoi(req.payload[1]);
-							digitizer->disable_io_port(SA220P::control_io_2);
+							digitizer->disable_io_port(aqmd3::SA220P::control_io_2);
 						}
 
 						req.send_response(ack);

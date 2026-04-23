@@ -8,22 +8,20 @@
 class StreamReader
 {
 private:
-    std::shared_ptr<StreamingContext> digitizer;
-    std::shared_ptr<AcquisitionBufferPool> buffer_pool;
+    std::shared_ptr<aqmd3::StreamingContext> digitizer;
+    std::shared_ptr<aqmd3::AcquisitionBufferPool> buffer_pool;
     uint64_t timeout;
 
     public :
-        StreamReader(std::shared_ptr<StreamingContext> digitizer, int64_t, std::shared_ptr<AcquisitionBufferPool> buffer_pool,
+        StreamReader(std::shared_ptr<aqmd3::StreamingContext> digitizer, int64_t, std::shared_ptr<aqmd3::AcquisitionBufferPool> buffer_pool,
                      uint64_t timeout)
-            : digitizer(digitizer)
-            , buffer_pool(buffer_pool)
-            , timeout(timeout)
+            : digitizer(digitizer), buffer_pool(buffer_pool), timeout(timeout)
         {
         }
-    
-        AcquiredData read(uint64_t tof_scans_to_acquire) const;
 
-     ~StreamReader() = default;
+        aqmd3::AcquiredData read(uint64_t tof_scans_to_acquire) const;
+
+        ~StreamReader() = default;
 };
 
 #endif

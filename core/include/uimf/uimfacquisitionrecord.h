@@ -9,11 +9,11 @@
 class UimfAcquisitionRecord
 {
 	UimfFrameParameters const parameters;
-	AcquiredData const acquiredData;
+	aqmd3::AcquiredData const acquiredData;
 	uint64_t const start_scan_index;
 
 public:
-	UimfAcquisitionRecord(UimfFrameParameters parameters, AcquiredData acquiredData, uint64_t start_scan_index)
+	UimfAcquisitionRecord(UimfFrameParameters parameters, aqmd3::AcquiredData acquiredData, uint64_t start_scan_index)
 		: parameters(parameters)
 		, acquiredData(acquiredData)
 		, start_scan_index(start_scan_index)
@@ -27,4 +27,5 @@ private:
 public:
 	std::shared_ptr<UimfFrame> to_frame() const;
 };
+
 #endif !UIMF_ACQUISITION_RECORD
