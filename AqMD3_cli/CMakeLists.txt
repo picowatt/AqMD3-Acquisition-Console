@@ -1,6 +1,5 @@
 ﻿project (AqMD3_cli)
 
-find_package(spdlog CONFIG REQUIRED)
 find_package(cxxopts CONFIG REQUIRED)
 find_package(TBB CONFIG REQUIRED)
 
@@ -13,6 +12,4 @@ target_link_libraries (AqMD3_cli
 		i::core
 		TBB::tbb
 		cxxopts::cxxopts
-		spdlog::spdlog
-		spdlog::spdlog_header_only
 )
