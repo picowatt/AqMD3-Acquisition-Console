@@ -1,6 +1,5 @@
 project (core)
 
-
 find_package(spdlog CONFIG REQUIRED)
 
 add_library (core
